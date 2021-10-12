@@ -7,6 +7,8 @@ import { FormGroup, FormBuilder } from '@angular/forms';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  isUpdated = false;
+  selectedIndex: any;
   formData = [{ fullName: 'akhil', email: 'akhil@123.com', message: 'hello' }];
   contactForm: FormGroup;
   constructor(private formBuilder: FormBuilder) {
@@ -23,7 +25,14 @@ export class AppComponent {
 
   onSubmit() {
     console.log('Your form data : ', this.contactForm.value);
-    this.formData.push(this.contactForm.value);
+
+    if (this.isUpdated) {
+      this.formData[this.selectedIndex] = this.contactForm.value;
+    } else {
+      this.formData.push(this.contactForm.value);
+    }
+    this.isUpdated = false;
+    this.contactForm.reset();
   }
 
   delete(index) {
@@ -33,7 +42,8 @@ export class AppComponent {
   update(data, index) {
     console.log('data::::', data);
     console.log('index:::', this.formData[index]);
-
+    this.isUpdated = true;
+    this.selectedIndex = index;
     this.contactForm.patchValue(this.formData[index]);
   }
 }
